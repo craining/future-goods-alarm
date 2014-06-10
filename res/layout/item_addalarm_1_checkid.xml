@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="50dip"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="20dip" >
+
+    <Button
+        android:id="@+id/btn_addalarm_1_new"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@drawable/bg_btn_selecte_p"
+        android:gravity="center"
+        android:text="最新价"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btn_addalarm_1_in"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dip"
+        android:layout_weight="1"
+        android:background="@drawable/bg_btn_selecte_n"
+        android:gravity="center"
+        android:text="买入价"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btn_addalarm_1_out"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dip"
+        android:layout_weight="1"
+        android:background="@drawable/bg_btn_selecte_n"
+        android:gravity="center"
+        android:text="卖出价"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+    <!--
+      <Button
+        android:id="@+id/btn_addalarm_1_rate"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="10dip"
+        android:layout_weight="1"
+        android:background="@drawable/bg_btn_selecte_n"
+        android:gravity="center"
+        android:text="涨跌幅" />
+    -->
+
+</LinearLayout>

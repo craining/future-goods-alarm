@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/lightgray"
+    android:minWidth="292dip"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dip"
+            android:layout_marginTop="10dip"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/edit_feedback_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:background="@drawable/bg_edit"
+                android:gravity="top"
+                android:hint="请输入反馈内容"
+                android:lines="5"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edit_feedback_addr"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edit_feedback_content"
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/bg_edit"
+                android:hint="联系方式(邮箱或QQ)"
+                android:inputType="textEmailAddress"
+                android:lines="1"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/positiveButtonLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dip" >
+
+            <Button
+                android:id="@+id/positiveButton"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_green_bg"
+                android:text="关闭"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/negativeButton"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_red_bg"
+                android:text="取消"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/third_button"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_red_bg"
+                android:text="取消"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

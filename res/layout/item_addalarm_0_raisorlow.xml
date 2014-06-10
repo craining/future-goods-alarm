@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="50dip"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="20dip" >
+
+    <Button
+        android:id="@+id/btn_addalarm_0_raise"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:background="@drawable/bg_btn_selecte_p"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:text="涨提醒"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btn_addalarm_0_low"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="20dip"
+        android:layout_weight="1"
+        android:background="@drawable/bg_btn_selecte_n"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:text="跌提醒"
+        android:textSize="20sp" />
+
+</LinearLayout>

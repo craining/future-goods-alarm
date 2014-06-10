@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingBottom="50dip"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="20dip" >
+
+    <TextView
+        android:id="@+id/text_addalarm_3_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/text_addalarm_3_tip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/yellow"
+        android:layout_marginTop="10dip"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btn_addalarm_3_finish"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dip"
+        android:background="@drawable/selector_btn_green_bg"
+        android:text="完成"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_addalarm_3_delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/selector_btn_red_bg"
+        android:text="删除提醒"
+        android:textColor="@color/white" />
+
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/img_item_alarm_logo"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:padding="8dip"
+        android:layout_alignParentLeft="true"
+        android:scaleType="fitXY" />
+
+    <View 
+        android:id="@+id/view_item_alarm_line"
+        android:layout_width="1dip"
+        android:layout_height="30dip"
+        android:background="@color/lightgray"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/img_item_alarm_logo" />
+    
+    <TextView
+        android:id="@+id/text_item_alarm_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dip"
+        android:layout_toRightOf="@id/view_item_alarm_line" 
+        android:textColor="@color/black"
+        android:textSize="15sp"/>
+
+</RelativeLayout>
