@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.zgy.goldmonitor.Data;
 import com.zgy.goldmonitor.MainApp;
 import com.zgy.goldmonitor.R;
@@ -95,7 +96,15 @@ public class AlarmListActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		MobclickAgent.onResume(this);
 		refreshList();
+	}
+	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 
 	private void refreshAlarms() {

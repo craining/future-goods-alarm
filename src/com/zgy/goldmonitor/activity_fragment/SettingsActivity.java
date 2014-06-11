@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.zgy.goldmonitor.MainApp;
 import com.zgy.goldmonitor.Preference;
 import com.zgy.goldmonitor.R;
@@ -91,7 +92,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		MobclickAgent.onResume(this);
 		mCheckAudio.setChecked(Preference.getInstance().isAlarmAudioOn());
 		mCheckVibrate.setChecked(Preference.getInstance().isAlarmVibrateOn());
 
@@ -119,6 +120,13 @@ public class SettingsActivity extends Activity implements OnClickListener {
 			mTextAlarmCount.setText("0");
 		}
 
+	}
+
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 
 	@Override

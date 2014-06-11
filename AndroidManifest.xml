@@ -20,6 +20,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 友盟 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".MainApp"
         android:allowBackup="true"
@@ -41,7 +47,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
-   
         <activity
             android:name="com.zgy.goldmonitor.activity_fragment.AlarmListActivity"
             android:label="@string/app_name"
@@ -50,9 +55,9 @@
         <activity
             android:name="com.zgy.goldmonitor.activity_fragment.AlertActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
 
         <receiver
@@ -67,27 +72,35 @@
             android:name="com.zgy.goldmonitor.receiver.AlarmReceiver"
             android:label="@string/app_name" >
         </receiver>
-         <receiver
+        <receiver
             android:name="com.zgy.goldmonitor.receiver.NotificationReceiver"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="com.zgy.goldmonitor.NOTIFICATION" />
             </intent-filter>
         </receiver>
-        
-         
-         
-          <!--  aa0e9370-->
+
+        <!-- 百度广告  aa0e9370 -->
         <meta-data
             android:name="BaiduMobAd_APP_ID"
             android:value="aa0e9370" />
         <meta-data
             android:name="BaiduMobAd_APP_SEC"
             android:value="aa0e9370" />
-        
-         <activity
+
+        <activity
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation" />
+
+        <!-- 友盟  5396cc3c56240b288701cad1 -->
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5396cc3c56240b288701cad1" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Channel ID" />
     </application>
 
 </manifest>

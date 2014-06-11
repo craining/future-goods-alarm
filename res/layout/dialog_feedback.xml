@@ -45,24 +45,39 @@
             android:layout_marginTop="10dip"
             android:orientation="vertical" >
 
-            <EditText
-                android:id="@+id/edit_feedback_content"
+            <RelativeLayout
+                android:id="@+id/layout_feedback_top_edit"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dip"
-                android:layout_marginRight="20dip"
-                android:background="@drawable/bg_edit"
-                android:gravity="top"
-                android:hint="请输入反馈内容"
-                android:lines="5"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dip"
+                    android:text="*"
+                    android:textSize="18sp"
+                    android:textColor="@color/red" />
+
+                <EditText
+                    android:id="@+id/edit_feedback_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dip"
+                    android:layout_marginRight="20dip"
+                    android:background="@drawable/bg_edit"
+                    android:gravity="top"
+                    android:hint="请输入反馈内容"
+                    android:lines="5"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/edit_feedback_addr"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/edit_feedback_content"
+                android:layout_below="@id/layout_feedback_top_edit"
                 android:layout_marginLeft="20dip"
                 android:layout_marginRight="20dip"
                 android:layout_marginTop="10dip"

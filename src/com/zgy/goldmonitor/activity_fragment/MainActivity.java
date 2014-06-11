@@ -12,13 +12,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AdViewListener;
+import com.umeng.analytics.MobclickAgent;
 import com.zgy.goldmonitor.Data;
 import com.zgy.goldmonitor.Debug;
 import com.zgy.goldmonitor.MainApp;
@@ -32,18 +32,18 @@ import com.zgy.goldmonitor.bean.GoodAlarmInfo;
 import com.zgy.goldmonitor.bean.Info;
 import com.zgy.goldmonitor.bean.InfoList;
 import com.zgy.goldmonitor.bean.PopupMenuItem;
-import com.zgy.goldmonitor.logic.CheckLogic;
 import com.zgy.goldmonitor.logic.Controller;
 import com.zgy.goldmonitor.logic.Listener;
 import com.zgy.goldmonitor.util.ActivityManager;
 import com.zgy.goldmonitor.util.FileUtil;
 import com.zgy.goldmonitor.util.NetworkUtil;
+import com.zgy.goldmonitor.util.PhoneUtil;
 import com.zgy.goldmonitor.views.ChartTabIndicatorView;
 import com.zgy.goldmonitor.views.CompatViewPager;
 import com.zgy.goldmonitor.views.PopupAlarmView;
 import com.zgy.goldmonitor.views.PopupMenuView;
-import com.zgy.goldmonitor.views.ToastView;
 import com.zgy.goldmonitor.views.PopupMenuView.OnPopupMenuItemClickedListener;
+import com.zgy.goldmonitor.views.ToastView;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
@@ -112,6 +112,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		getAlarmsandRefresh();
 		refreshData();
 		// CheckLogic.getInstance().check(MainActivity.this);
+		
+		Debug.e("", "getDeviceInfo=" + PhoneUtil.getDeviceInfo(MainActivity.this));
+		
+		MobclickAgent.updateOnlineConfig(MainActivity.this);
 	}
 
 	
@@ -183,12 +187,21 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		MobclickAgent.onResume(this);
 		if (mNeedRefreshAlarmsViews) {
 			mNeedRefreshAlarmsViews = false;
 			refreshAlarmsViews();
 		}
 	}
+	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
+
+
 
 	public void getAlarmsandRefresh() {
 		Controller.getInstace().refreshAlarms(mListener);

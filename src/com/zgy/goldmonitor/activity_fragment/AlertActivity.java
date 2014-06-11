@@ -10,6 +10,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.zgy.goldmonitor.Debug;
 import com.zgy.goldmonitor.R;
 import com.zgy.goldmonitor.dao.DbOpera;
@@ -103,5 +104,19 @@ public class AlertActivity extends Activity implements OnClickListener {
 		super.onDestroy();
 		ActivityManager.pop(this);
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
+	
+	
 
 }
