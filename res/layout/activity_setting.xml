@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dip"
                     android:layout_marginTop="20dip"
-                    android:text="提醒设置"
+                    android:text="提醒"
                     android:textColor="@color/darkgray"
                     android:textSize="14sp" />
 
