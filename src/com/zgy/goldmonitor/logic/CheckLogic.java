@@ -31,19 +31,24 @@ public class CheckLogic {
 
 	public void check(final Context context) {
 		AlarmUtil.cancelAlarm();
-		
-		if(!NetworkUtil.isNetworkAvailable(MainApp.getInstance())) {
+
+		if (Preference.getInstance().isAlarmOff()) {
+			Debug.e("", "提醒已关，不再提醒");
 			return;
 		}
-		
-		if(Preference.getInstance().is3GNoAlarmOn()) {
-			if(!NetworkUtil.isWifiEnabled(MainApp.getInstance())) {
-				
+
+		if (!NetworkUtil.isNetworkAvailable(MainApp.getInstance())) {
+			return;
+		}
+
+		if (Preference.getInstance().is3GNoAlarmOn()) {
+			if (!NetworkUtil.isWifiEnabled(MainApp.getInstance())) {
+
 				Debug.e("", "非WIFI，不提醒");
 				return;
 			}
 		}
-		
+
 		AlarmUtil.setAlarm();
 		new Thread(new Runnable() {
 
@@ -106,6 +111,9 @@ public class CheckLogic {
 		public void getDataFinished(boolean result, InfoList data) {
 			super.getDataFinished(result, data);
 			if (result && data.infos != null) {
+
+				ArrayList<AlarmInfo> alarms = new ArrayList<AlarmInfo>();
+
 				for (AlarmInfo a : mAlarm) {
 					if (data.infos.containsKey(a.nameCn)) {
 						Info info = data.infos.get(a.nameCn);
@@ -113,14 +121,20 @@ public class CheckLogic {
 							if (a.markValue - a.changedValue - Float.parseFloat(info.values[a.checkId]) > 0) {
 								// 跌破
 								Debug.e("", a.nameCn + ":" + info.values[a.checkId] + "相对于 " + a.markValue + " 跌破 " + a.changedValue);
-								AlarmUtil.doAlert(mContext, a, Float.parseFloat(info.values[a.checkId]));
+
+								a.nowValue = Float.parseFloat(info.values[a.checkId]);
+								alarms.add(a);
+								
+								// AlarmUtil.doAlertNotify(mContext, a, Float.parseFloat(info.values[a.checkId]));
 							} else {
 								Debug.v("", a.nameCn + ":" + info.values[a.checkId] + "相对于 " + a.markValue + " 未跌破 " + a.changedValue);
 							}
 						} else {
 							if (Float.parseFloat(info.values[a.checkId]) - a.markValue - a.changedValue > 0) {
 								// 涨超
-								AlarmUtil.doAlert(mContext, a, Float.parseFloat(info.values[a.checkId]));
+								// AlarmUtil.doAlertNotify(mContext, a, Float.parseFloat(info.values[a.checkId]));
+								a.nowValue = Float.parseFloat(info.values[a.checkId]);
+								alarms.add(a);
 								Debug.e("", a.nameCn + ":" + info.values[a.checkId] + "相对于 " + a.markValue + " 涨超 " + a.changedValue);
 							} else {
 								Debug.v("", a.nameCn + ":" + info.values[a.checkId] + "相对于 " + a.markValue + " 未涨超 " + a.changedValue);
@@ -128,6 +142,8 @@ public class CheckLogic {
 						}
 					}
 				}
+
+				AlarmUtil.doAlerts(mContext, alarms);
 			}
 
 		}

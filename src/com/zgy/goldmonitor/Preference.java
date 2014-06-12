@@ -25,9 +25,10 @@ public class Preference extends PreferenceUtil {
 
 	private static final String FEEDBACK_STR = "feedback_str";
 	private static final String FEEDBACK_ADDR = "feedback_addr";
-	
+
 	private static final String ALARM_3G = "3g_alarm";
 	private static final String PIC_3G = "3g_pic";
+	private static final String ALARM_SWITCH = "alarm_switch";
 
 	private Preference() {
 		super(PREFERENCE_NAME);
@@ -52,6 +53,7 @@ public class Preference extends PreferenceUtil {
 	public void setFeedbackStr(String str) {
 		putString(FEEDBACK_STR, str);
 	}
+
 	public String getFeedbackAddr() {
 		return getString(FEEDBACK_ADDR, "");
 	}
@@ -59,7 +61,7 @@ public class Preference extends PreferenceUtil {
 	public void setFeedbackAddr(String str) {
 		putString(FEEDBACK_ADDR, str);
 	}
-	
+
 	public int getLastViewGroupId() {
 		return getInt(LAST_VIEW_GROUP_ID, 0);
 	}
@@ -116,7 +118,14 @@ public class Preference extends PreferenceUtil {
 
 	}
 
-	
+	public boolean isAlarmOff() {
+		return getBool(ALARM_SWITCH, false);
+	}
+
+	public void setAlarmOff(boolean off) {
+		putBool(ALARM_SWITCH, off);
+	}
+
 	public boolean is3GNoPicOn() {
 		return getBool(PIC_3G, false);
 	}
@@ -124,7 +133,7 @@ public class Preference extends PreferenceUtil {
 	public void set3GNoPicOn(boolean on) {
 		putBool(PIC_3G, on);
 	}
-	
+
 	public boolean is3GNoAlarmOn() {
 		return getBool(ALARM_3G, false);
 	}
@@ -132,7 +141,7 @@ public class Preference extends PreferenceUtil {
 	public void set3GNoAlarmOn(boolean on) {
 		putBool(ALARM_3G, on);
 	}
-	
+
 	public boolean isAlarmAudioOn() {
 		return getBool(ALARM_AUDIO, true);
 	}

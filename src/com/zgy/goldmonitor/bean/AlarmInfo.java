@@ -14,4 +14,6 @@ public class AlarmInfo {
 	public float markValue;//基准值
 	public float changedValue;//波动范围
 	
+	public float nowValue;
+	
 }

@@ -54,6 +54,16 @@ public class ActivityManager {
 		return false;
 	}
 	
+	public static boolean isActivityRunning(Class<? extends Activity> cls) {
+		for(Activity a : stack) {
+			if(a.getClass().equals(cls)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * 移除指定activity
 	 * @Description:

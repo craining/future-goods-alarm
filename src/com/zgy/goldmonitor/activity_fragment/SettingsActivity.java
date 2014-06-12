@@ -22,6 +22,7 @@ import com.zgy.goldmonitor.Preference;
 import com.zgy.goldmonitor.R;
 import com.zgy.goldmonitor.logic.CheckLogic;
 import com.zgy.goldmonitor.util.ActivityManager;
+import com.zgy.goldmonitor.util.AlarmUtil;
 import com.zgy.goldmonitor.util.NetworkUtil;
 import com.zgy.goldmonitor.views.DialogFeedback;
 import com.zgy.goldmonitor.views.DialogInput;
@@ -35,6 +36,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	private ImageView mImgBack;
 	private CheckBox mCheckAudio;
 	private CheckBox mCheckVibrate;
+	private CheckBox mCheckSwitchAlarm;
 	private CheckBox mCheck3GPic;
 	private CheckBox mCheck3GAlarm;
 
@@ -49,7 +51,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	private TextView mTextAlarmCount;
 	private TextView mTextRefreshRate;
 
-	private LinearLayout mLayoutAlarmSetAvoid;
+	private TextView mTextAlarmSetAvoid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		mCheckAudio = (CheckBox) findViewById(R.id.check_settings_audio);
 		mCheckVibrate = (CheckBox) findViewById(R.id.check_settings_vibrate);
+		mCheckSwitchAlarm = (CheckBox) findViewById(R.id.check_settings_switch_alarm);
 		mCheck3GPic = (CheckBox) findViewById(R.id.check_settings_3g_pic);
 		mCheck3GAlarm = (CheckBox) findViewById(R.id.check_settings_3g_alarm);
 		mLayoutAlarmList = (RelativeLayout) findViewById(R.id.layout_settings_alarmlist);
@@ -70,7 +73,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		mLayoutFeedback = (RelativeLayout) findViewById(R.id.layout_settings_feedback);
 		mLayoutAbout = (RelativeLayout) findViewById(R.id.layout_settings_about);
 		mLayoutDeclaration = (RelativeLayout) findViewById(R.id.layout_settings_declaration);
-		mLayoutAlarmSetAvoid = (LinearLayout) findViewById(R.id.layout_alarm_avoid);
+		mTextAlarmSetAvoid = (TextView) findViewById(R.id.text_alarm_avoid);
 		mTextAlarmWay = (TextView) findViewById(R.id.text_settings_alertway);
 		mTextRefreshRate = (TextView) findViewById(R.id.text_settings_rate);
 		mTextAlarmCount = (TextView) findViewById(R.id.text_settings_alarm_count);
@@ -78,6 +81,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		mImgBack.setOnClickListener(this);
 		mCheckAudio.setOnClickListener(this);
 		mCheckVibrate.setOnClickListener(this);
+		mCheckSwitchAlarm.setOnClickListener(this);
 		mCheck3GPic.setOnClickListener(this);
 		mCheck3GAlarm.setOnClickListener(this);
 		mLayoutAlarmList.setOnClickListener(this);
@@ -98,7 +102,8 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		mCheck3GAlarm.setChecked(Preference.getInstance().is3GNoAlarmOn());
 		mCheck3GPic.setChecked(Preference.getInstance().is3GNoPicOn());
-		
+		mCheckSwitchAlarm.setChecked(Preference.getInstance().isAlarmOff());
+
 		switch (Preference.getInstance().getAlarmAlertWay()) {
 		case MainApp.ALARM_WAY_NOTIFY:
 			mTextAlarmWay.setText("通知栏消息");
@@ -112,17 +117,27 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		mTextRefreshRate.setText(Preference.getInstance().getRefreshRate() + "分钟");
 
-		if (MainApp.mAlarms != null && MainApp.mAlarms.size() > 0) {
-			mLayoutAlarmSetAvoid.setVisibility(View.GONE);
-			mTextAlarmCount.setText("" + MainApp.mAlarms.size());
-		} else {
-			mLayoutAlarmSetAvoid.setVisibility(View.VISIBLE);
-			mTextAlarmCount.setText("0");
-		}
+		refreshPannel();
 
 	}
 
-	
+	private void refreshPannel() {
+
+		if (MainApp.mAlarms != null && MainApp.mAlarms.size() > 0) {
+			mTextAlarmSetAvoid.setVisibility(View.GONE);
+			mTextAlarmCount.setText("" + MainApp.mAlarms.size());
+		} else {
+			mTextAlarmSetAvoid.setText("您尚未增加任何提醒\r\n无需进行设置");
+			mTextAlarmSetAvoid.setVisibility(View.VISIBLE);
+			mTextAlarmCount.setText("0");
+		}
+
+		if (Preference.getInstance().isAlarmOff()) {
+			mTextAlarmSetAvoid.setText("您已关闭提醒功能\r\n无需进行设置");
+			mTextAlarmSetAvoid.setVisibility(View.VISIBLE);
+		}
+	}
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -149,6 +164,16 @@ public class SettingsActivity extends Activity implements OnClickListener {
 			Preference.getInstance().setAlarmVibrateOn(mCheckVibrate.isChecked());
 			break;
 
+		case R.id.check_settings_switch_alarm:
+			Preference.getInstance().setAlarmOff(mCheckSwitchAlarm.isChecked());
+			if (mCheckSwitchAlarm.isChecked()) {
+				AlarmUtil.cancelAlarm();
+			} else {
+				CheckLogic.getInstance().check(SettingsActivity.this);
+			}
+			
+			refreshPannel();
+			break;
 		case R.id.check_settings_3g_pic:
 			Preference.getInstance().set3GNoPicOn(mCheck3GPic.isChecked());
 			break;

@@ -1,5 +1,7 @@
 package com.zgy.goldmonitor.util;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -19,6 +21,7 @@ import com.zgy.goldmonitor.MainApp;
 import com.zgy.goldmonitor.Preference;
 import com.zgy.goldmonitor.R;
 import com.zgy.goldmonitor.activity_fragment.AlertActivity;
+import com.zgy.goldmonitor.activity_fragment.AlertsActivity;
 import com.zgy.goldmonitor.bean.AlarmInfo;
 import com.zgy.goldmonitor.receiver.AlarmReceiver;
 import com.zgy.goldmonitor.receiver.NotificationReceiver;
@@ -54,16 +57,27 @@ public class AlarmUtil {
 		am.cancel(sender);
 	}
 
-	public static void doAlert(Context context, AlarmInfo alarmInfo, float nowValue) {
+	public static void doAlerts(Context context, ArrayList<AlarmInfo> alarms) {
+		if (alarms.size() > 0) {
+			if (Preference.getInstance().getAlarmAlertWay() == MainApp.ALARM_WAY_DLG) {
+				doAlertsDlg(context, alarms);
+			} else {
+				doAlertsNotify(context, alarms);
+			}
+		}
+	}
 
-		String title = alarmInfo.nameCn + (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? "跌提醒" : "涨提醒");
-		String content =
+	private static void doAlertDlg(Context context, AlarmInfo alarmInfo) {
+		String title = "";
+		String content = "";
+		title = alarmInfo.nameCn + (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? "跌提醒" : "涨提醒");
+		content = content +
 
 		alarmInfo.nameCn + "的"
 
 		+ (Data.isInner(alarmInfo.groupId) ? Data.Inner.getIdName(alarmInfo.checkId) : Data.Outer.getIdName(alarmInfo.checkId))
 
-		+ "目前是： " + nowValue
+		+ "目前是： " + alarmInfo.nowValue
 
 		+ "；\r\n相对于 "
 
@@ -71,24 +85,113 @@ public class AlarmUtil {
 
 		+ (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? " 跌破了 " : " 涨超了 ")
 
-		+ Math.abs(alarmInfo.markValue - nowValue)
+		+ Math.abs(alarmInfo.markValue - alarmInfo.nowValue)
 
 		+ "，\r\n此变化范围已经达到了预设的变化提醒范围。(预设范围是:" + alarmInfo.changedValue + ")";
+		if (ActivityManager.isActivityRunning(AlertActivity.class)) {
+			ActivityManager.popClass(AlertActivity.class);
+		}
+		Intent i = new Intent(context, AlertActivity.class);
+		i.putExtra("groupid", alarmInfo.groupId);
+		i.putExtra("itemid", Data.getItemIdByNameEn(alarmInfo.groupId, alarmInfo.nameEn));
+		i.putExtra("nameen", alarmInfo.nameEn);
+		i.putExtra("raiselow", alarmInfo.raseOrLow);
+		i.putExtra("content", content);
+		i.putExtra("title", title);
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(i);
 
-		if (Preference.getInstance().getAlarmAlertWay() == MainApp.ALARM_WAY_DLG) {
-			Intent i = new Intent(context, AlertActivity.class);
-			i.putExtra("groupid", alarmInfo.groupId);
-			i.putExtra("itemid", Data.getItemIdByNameEn(alarmInfo.groupId, alarmInfo.nameEn));
-			i.putExtra("nameen", alarmInfo.nameEn);
-			i.putExtra("raiselow", alarmInfo.raseOrLow);
-			i.putExtra("content", content);
-			i.putExtra("title", title);
-			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(i);
+		try {
+			if (Preference.getInstance().isAlarmVibrateOn()) {
+				PhoneUtil.doVibraterNormal((Vibrator) MainApp.getInstance().getSystemService(Service.VIBRATOR_SERVICE));
+			}
 
-		} else {
+			if (Preference.getInstance().isAlarmAudioOn()) {
+				Uri notificationRing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+				Ringtone r = RingtoneManager.getRingtone(MainApp.getInstance(), notificationRing);
+				r.play();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-			String id=(alarmInfo.raseOrLow + 1) + "" + alarmInfo.groupId + "" + Data.getItemIdByNameEn(alarmInfo.groupId, alarmInfo.nameEn);
+	private static void doAlertsDlg(Context context, ArrayList<AlarmInfo> alarmInfos) {
+
+		// String title = "";
+		// String content = "";
+		if (alarmInfos.size() == 1) {
+			doAlertDlg(context, alarmInfos.get(0));
+			return;
+		}
+		// title = "多个提醒";
+		// for (int i = 0; i < alarmInfos.size(); i++) {
+		// AlarmInfo alarmInfo = alarmInfos.get(i);
+		// float nowValue = nowValues.get(i);
+		// content = content +
+		//
+		// alarmInfo.nameCn + "的"
+		//
+		// + (Data.isInner(alarmInfo.groupId) ? Data.Inner.getIdName(alarmInfo.checkId) : Data.Outer.getIdName(alarmInfo.checkId))
+		//
+		// + "目前是： " + nowValue
+		//
+		// + "；\r\n相对于 "
+		//
+		// + alarmInfo.markValue
+		//
+		// + (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? " 跌破了 " : " 涨超了 ")
+		//
+		// + Math.abs(alarmInfo.markValue - nowValue)
+		//
+		// + "，\r\n此变化范围已经达到了预设的变化提醒范围。(预设范围是:" + alarmInfo.changedValue + ")\r\n\r\n";
+		// }
+
+		if (ActivityManager.isActivityRunning(AlertsActivity.class)) {
+			ActivityManager.popClass(AlertsActivity.class);
+		}
+		AlertsActivity.startAlertsDlg(context, alarmInfos);
+
+		try {
+			if (Preference.getInstance().isAlarmVibrateOn()) {
+				PhoneUtil.doVibraterNormal((Vibrator) MainApp.getInstance().getSystemService(Service.VIBRATOR_SERVICE));
+			}
+
+			if (Preference.getInstance().isAlarmAudioOn()) {
+				Uri notificationRing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+				Ringtone r = RingtoneManager.getRingtone(MainApp.getInstance(), notificationRing);
+				r.play();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void doAlertsNotify(Context context, ArrayList<AlarmInfo> alarmInfos) {
+
+		for (int i = 0; i < alarmInfos.size(); i++) {
+			AlarmInfo alarmInfo = alarmInfos.get(i);
+
+			String title = alarmInfo.nameCn + (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? "跌提醒" : "涨提醒");
+			String content =
+
+			alarmInfo.nameCn + "的"
+
+			+ (Data.isInner(alarmInfo.groupId) ? Data.Inner.getIdName(alarmInfo.checkId) : Data.Outer.getIdName(alarmInfo.checkId))
+
+			+ "目前是： " + alarmInfo.nowValue
+
+			+ "；\r\n相对于 "
+
+			+ alarmInfo.markValue
+
+			+ (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? " 跌破了 " : " 涨超了 ")
+
+			+ Math.abs(alarmInfo.markValue - alarmInfo.nowValue)
+
+			+ "，\r\n此变化范围已经达到了预设的变化提醒范围。(预设范围是:" + alarmInfo.changedValue + ")";
+
+			String id = (alarmInfo.raseOrLow + 1) + "" + alarmInfo.groupId + "" + Data.getItemIdByNameEn(alarmInfo.groupId, alarmInfo.nameEn);
 			int id_notification = Integer.parseInt(id);
 			Debug.e("", "notification id =" + id + "-->" + id_notification);
 
@@ -110,11 +213,11 @@ public class AlarmUtil {
 
 			CharSequence contentText = (Data.isInner(alarmInfo.groupId) ? Data.Inner.getIdName(alarmInfo.checkId) : Data.Outer.getIdName(alarmInfo.checkId))
 
-			+ ":" + nowValue + "；比" + alarmInfo.markValue
+			+ ":" + alarmInfo.nowValue + "；比" + alarmInfo.markValue
 
 			+ (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? "跌破了 " : "涨超了 ")
 
-			+ Math.abs(alarmInfo.markValue - nowValue);
+			+ Math.abs(alarmInfo.markValue - alarmInfo.nowValue);
 			CharSequence contentTitle = alarmInfo.nameCn + (alarmInfo.raseOrLow == AlarmInfo.ALARM_LOW ? "跌提醒" : "涨提醒");
 
 			Intent notificationIntent = new Intent(NotificationReceiver.ACTION_NOTIFICATION);
@@ -130,27 +233,26 @@ public class AlarmUtil {
 			notification.setLatestEventInfo(context, contentTitle, contentText, contentItent);
 			// 把Notification传递给NotificationManager
 			notificationManager.notify(id_notification, notification);// 注意ID号，不能与此程序中的其他通知栏图标相同
-
 		}
 
 		try {
-			if (Preference.getInstance().isAlarmAudioOn()) {
-				Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-				Ringtone r = RingtoneManager.getRingtone(MainApp.getInstance(), notification);
-				r.play();
-			}
-
 			if (Preference.getInstance().isAlarmVibrateOn()) {
 				PhoneUtil.doVibraterNormal((Vibrator) MainApp.getInstance().getSystemService(Service.VIBRATOR_SERVICE));
+			}
+
+			if (Preference.getInstance().isAlarmAudioOn()) {
+				Uri notificationRing = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+				Ringtone r = RingtoneManager.getRingtone(MainApp.getInstance(), notificationRing);
+				r.play();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public static void cancelNotification(Context context, int groupId, int itemId, int raiseLow) {
-		String id=(raiseLow + 1) + "" +  groupId + "" + itemId;
+		String id = (raiseLow + 1) + "" + groupId + "" + itemId;
 		int id_notification = Integer.parseInt(id);
 		Debug.e("", "notification id =" + id_notification);
 		NotificationManager notificationManager = (NotificationManager) context.getSystemService(android.content.Context.NOTIFICATION_SERVICE);

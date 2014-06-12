@@ -46,15 +46,13 @@ public class AddAlarm4 extends LinearLayout {
 
 		Button btnOk = (Button) mManiContentView.findViewById(R.id.btn_addalarm_3_finish);
 		final Button btnDel = (Button) mManiContentView.findViewById(R.id.btn_addalarm_3_delete);
-		
-		
-		if(Preference.getInstance().is3GNoAlarmOn()) {
+
+		if (Preference.getInstance().is3GNoAlarmOn()) {
 			mTextTip.setText("您已设置为2G/3G网络下不提醒，请注意。");
 		} else {
 			mTextTip.setText("提醒功能需要消耗少量网络流量，用于实时更新当前期货行情；\r\n您若不想消耗2g/3g网络流量，请在设置页面里设置");
 		}
-		
-		
+
 		if (mPop.ismIsAddNew()) {
 			btnDel.setVisibility(View.GONE);
 			btnOk.setText("完成添加");
@@ -117,8 +115,13 @@ public class AddAlarm4 extends LinearLayout {
 				}
 				if (DbOpera.getInstance().insertAlarm(mPop.getmAlarmInfo())) {
 					((MainActivity) mContext).getAlarmsandRefresh();
-					CheckLogic.getInstance().check(mContext);
-					ToastView.showToast(mContext, btnDel.getVisibility() == View.VISIBLE ? "提醒已更新！" : "提醒已添加！", ToastView.LENGTH_LONG);
+
+					if (Preference.getInstance().isAlarmOff()) {
+						new AlertDialog.Builder(mContext).setTitle("提示").setMessage((btnDel.getVisibility() == View.VISIBLE ? "提醒已更新！" : "提醒已添加！") + "\r\n但您已关闭所有提醒，若开启，请在设置页开启" ).setPositiveButton("好的", null).setCancelable(false).create().show();
+					} else {
+						CheckLogic.getInstance().check(mContext);
+						ToastView.showToast(mContext, btnDel.getVisibility() == View.VISIBLE ? "提醒已更新！" : "提醒已添加！", ToastView.LENGTH_LONG);
+					}
 				} else {
 					ToastView.showToast(mContext, btnDel.getVisibility() == View.VISIBLE ? "提醒更新失败，请稍后再试" : "提醒添加失败，请稍后再试", ToastView.LENGTH_LONG);
 				}
