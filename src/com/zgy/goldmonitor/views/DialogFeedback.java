@@ -202,7 +202,7 @@ public class DialogFeedback extends Dialog {
 								public void run() {
 									try {
 										StringBuilder sb = new StringBuilder();
-										sb.append(content + "\r\n" + addr).append(context.getResources().getString(R.string.version_str)).append(PhoneUtil.getHandsetInfo(context));
+										sb.append(content + "\r\n" + addr + "\r\n").append(context.getResources().getString(R.string.version_str)).append(PhoneUtil.getHandsetInfo(context));
 										SendEmailUtil email = new SendEmailUtil();
 										email.sendMail("期货通反馈", sb.toString(), "craining@163.com");
 //										Log.e("", "反馈内容   ：" + content);
