@@ -79,13 +79,15 @@ public class CheckLogic {
 							}
 						}
 
-						if (innerList.size() > 0) {
-							Controller.getInstace().getDataNoThread(true, (String[]) innerList.toArray(new String[innerList.size()]), new TestListener(alarms_inner, context));
-						}
-						if (outerList.size() > 0) {
-							Controller.getInstace().getDataNoThread(false, (String[]) outerList.toArray(new String[innerList.size()]), new TestListener(alarms_outer, context));
-						}
-
+//						if (innerList.size() > 0) {
+//							Controller.getInstace().getDataNoThread(true, (String[]) innerList.toArray(new String[innerList.size()]), new TestListener(alarms_inner, context));
+//						}
+//						if (outerList.size() > 0) {
+//							Controller.getInstace().getDataNoThread(false, (String[]) outerList.toArray(new String[innerList.size()]), new TestListener(alarms_outer, context));
+//						}
+						alarms_inner.addAll(alarms_outer);
+						Controller.getInstace().getDataNoThread((String[]) innerList.toArray(new String[innerList.size()]), (String[]) outerList.toArray(new String[innerList.size()]), new TestListener(alarms_inner, context));
+						
 					} else {
 						AlarmUtil.cancelAlarm();
 					}

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import android.app.Application;
 import android.os.Environment;
 
+import cn.sharesdk.framework.ShareSDK;
+
 import com.zgy.goldmonitor.bean.AlarmInfo;
 import com.zgy.goldmonitor.util.ImageLoaderUtil;
 
@@ -49,6 +51,7 @@ public class MainApp extends Application {
 		super.onCreate();
 		instance = this;
 		ImageLoaderUtil.getInstance().initConfig(this);
+		ShareSDK.initSDK(this);
 	}
 
 	public static MainApp getInstance() {

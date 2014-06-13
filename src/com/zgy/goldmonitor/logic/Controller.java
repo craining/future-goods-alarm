@@ -1,6 +1,7 @@
 package com.zgy.goldmonitor.logic;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import android.text.TextUtils;
 
@@ -10,6 +11,8 @@ import com.zgy.goldmonitor.MainApp;
 import com.zgy.goldmonitor.bean.AlarmInfo;
 import com.zgy.goldmonitor.bean.GoodAlarmInfo;
 import com.zgy.goldmonitor.bean.HttpRequestResult;
+import com.zgy.goldmonitor.bean.Info;
+import com.zgy.goldmonitor.bean.InfoList;
 import com.zgy.goldmonitor.dao.DbOpera;
 import com.zgy.goldmonitor.util.HttpUtil;
 import com.zgy.goldmonitor.util.PraseUtil;
@@ -96,44 +99,68 @@ public class Controller {
 
 	}
 
-	public void getDataNoThread(final boolean inner_outer, final String[] datas, final Listener listener) {
+	public void getDataNoThread(final String[] datasInner,final String[] datasOuter, final Listener listener) {
 
 		try {
-			StringBuilder url = new StringBuilder(URL);
+			StringBuffer url = new StringBuffer(URL);
 			
 			String rn = (new Date()).getTime() + (Math.random() + "").toString().replace("0.", "");
 			url.append("rn=").append(rn);
 			url.append("&list=");
 			
 			
-			for (String s : datas) {
+			StringBuffer urlInner = new StringBuffer(url.toString());
+			StringBuffer urlOuter = new StringBuffer(url.toString());
+			
+			for (String s : datasInner) {
 				if (!TextUtils.isEmpty(s)) {
-					url.append(s).append(",");
+					urlInner.append(s).append(",");
 				}
 			}
-
-			HttpRequestResult result = HttpUtil.getInstence().sendRequest(url.toString().substring(0, url.length() - 1), null, false);
-			if (result == null || !result.isConnectionOk() || TextUtils.isEmpty(result.result)) {
-				listener.getDataFinished(false, null);
-				return;
+			for (String s : datasOuter) {
+				if (!TextUtils.isEmpty(s)) {
+					urlOuter.append(s).append(",");
+				}
 			}
+			
 
-			Debug.i("", "resonse=" + result.result);
-			if (TextUtils.isEmpty(result.result) || !result.result.contains(";") || !result.result.contains("=") || !result.result.contains(",")) {
-				Debug.e("", "没有数据");
-				listener.getDataFinished(false, null);
-				return;
-			}
-
-			if(listener!=null) {
-				listener.getDataFinished(true, PraseUtil.prase(inner_outer, result.result));
-			}
-
-//			if(mListeners!=null) {
-//				for(Listener l : mListeners) {
-//					l.getDataFinished(true, PraseUtil.prase(inner_outer, result.result));
-//				}
+			HttpRequestResult resultInner = HttpUtil.getInstence().sendRequest(urlInner.toString().substring(0, urlInner.length() - 1), null, false);
+			HttpRequestResult resultOuter = HttpUtil.getInstence().sendRequest(urlOuter.toString().substring(0, urlOuter.length() - 1), null, false);
+//			if (resultInner == null || !resultInner.isConnectionOk() || TextUtils.isEmpty(resultInner.result)) {
+//				listener.getDataFinished(false, null);
+//				return;
 //			}
+			
+//			if (TextUtils.isEmpty(result.result) || !result.result.contains(";") || !result.result.contains("=") || !result.result.contains(",")) {
+//				Debug.e("", "没有数据");
+//				listener.getDataFinished(false, null);
+//				return;
+//			}
+			
+			InfoList listInner = new InfoList();
+			InfoList listOuter = new InfoList();
+			
+			if(resultInner !=null && resultInner.isConnectionOk() && !TextUtils.isEmpty(resultInner.result) && resultInner.result.contains(";") && resultInner.result.contains("=") && resultInner.result.contains(",")) {
+				listInner = PraseUtil.prase(true, resultInner.result);
+				Debug.i("", "resonse Inner=" + resultInner.result);
+			}
+			if(resultOuter !=null && resultOuter.isConnectionOk() && !TextUtils.isEmpty(resultOuter.result)&& resultOuter.result.contains(";") && resultOuter.result.contains("=") && resultOuter.result.contains(",")) {
+				listOuter = PraseUtil.prase(false, resultOuter.result);
+				Debug.i("", "resonse Outer=" + resultOuter.result);
+			}
+			
+			InfoList allList = new InfoList();
+			HashMap<String, Info> infos = new HashMap<String, Info>();
+			if(listInner.infos!=null && listInner.infos.size()>0) {
+				infos.putAll(listInner.infos);
+			}
+			if(listOuter.infos!=null && listOuter.infos.size()>0) {
+				infos.putAll(listOuter.infos);
+			}
+			allList.infos = infos;
+			if(listener!=null) {
+				listener.getDataFinished(true,  allList);
+			}
 
 		} catch (Exception e) {
 			if(listener!=null) {

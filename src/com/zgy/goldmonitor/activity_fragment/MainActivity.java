@@ -34,6 +34,7 @@ import com.zgy.goldmonitor.bean.InfoList;
 import com.zgy.goldmonitor.bean.PopupMenuItem;
 import com.zgy.goldmonitor.logic.Controller;
 import com.zgy.goldmonitor.logic.Listener;
+import com.zgy.goldmonitor.logic.PlatformLogic;
 import com.zgy.goldmonitor.util.ActivityManager;
 import com.zgy.goldmonitor.util.FileUtil;
 import com.zgy.goldmonitor.util.NetworkUtil;
@@ -116,6 +117,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		Debug.e("", "getDeviceInfo=" + PhoneUtil.getDeviceInfo(MainActivity.this));
 		
 		MobclickAgent.updateOnlineConfig(MainActivity.this);
+		
 	}
 
 	

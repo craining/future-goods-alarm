@@ -202,7 +202,7 @@ public class AlertsActivity extends Activity implements OnClickListener {
 
 			+ Math.abs(info.markValue - info.nowValue)
 
-			+ "，\r\n此变化范围已经达到了预设的变化提醒范围。(预设范围是:" + info.changedValue + ")";
+			+ "，\r\n(预设范围是:" + info.changedValue + ")";
 
 			holder.img.setImageResource(info.raseOrLow == AlarmInfo.ALARM_LOW ? R.drawable.ic_alarm_low : R.drawable.ic_alarm_raise);
 			holder.textTitle.setText(info.nameCn + (info.raseOrLow == AlarmInfo.ALARM_LOW ? "跌提醒" : "涨提醒"));
