@@ -13,12 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zgy.goldmonitor.Debug;
 import com.zgy.goldmonitor.Preference;
 import com.zgy.goldmonitor.R;
+import com.zgy.goldmonitor.util.AppUtil;
 import com.zgy.goldmonitor.util.NetworkUtil;
 import com.zgy.goldmonitor.util.PhoneUtil;
 import com.zgy.goldmonitor.util.SendEmailUtil;
-import com.zgy.goldmonitor.views.DialogNormal.Builder;
 
 public class DialogFeedback extends Dialog {
 
@@ -202,10 +203,11 @@ public class DialogFeedback extends Dialog {
 								public void run() {
 									try {
 										StringBuilder sb = new StringBuilder();
-										sb.append(content + "\r\n" + addr + "\r\n").append(context.getResources().getString(R.string.version_str)).append(PhoneUtil.getHandsetInfo(context));
+										sb.append(content + "\r\nAddr = " + addr + "\r\nVersion = ").append(context.getResources().getString(R.string.version_str)).append(AppUtil.getChannelId()).append(PhoneUtil.getHandsetInfo(context));
+										
+										Debug.e("", "反馈内容   ：" + sb.toString());
 										SendEmailUtil email = new SendEmailUtil();
 										email.sendMail("期货通反馈", sb.toString(), "craining@163.com");
-//										Log.e("", "反馈内容   ：" + content);
 									} catch (Exception e) {
 										e.printStackTrace();
 									}

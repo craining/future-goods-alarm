@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class Debug {
 
-	public static final boolean LOG = false;//Log开关，便于本地调试；（确保svn服务器上为false，以免发布时忘记关闭）
+	public static final boolean LOG = true;//Log开关，便于本地调试；（确保svn服务器上为false，以免发布时忘记关闭）
 	
 	// 用来防止msg为空时的异常
 	private static final String NULL_STR = "msg is null!";
